@@ -25,23 +25,17 @@
 
 
 
-static int screenWidth = 500;
-static int screenHeight = 400;
-static int resolution = 3;
-static int resolutionWidth = 3840 / resolution;
-static int resolutionHeight = 2400 / resolution;
-static float screenRatio = static_cast<float>(screenWidth / screenHeight);
 
 /*Constants*/
 static const float FPS = 60;
-static const float playerVelocity = 10; // in Blocks per second
 
 
-static void setBool(int* myBool, bool value, int position) {
-	int shifted = (value << position);
-	(*myBool) &= ~(1 << position);
-	(*myBool) |= shifted;
-}
+
+
+
+static int screenWidth = 500;
+static int screenHeight = 400;
+static float screenRatio = static_cast<float>(screenWidth / screenHeight);
 
 /**
  *
@@ -147,14 +141,13 @@ int main(void)
 		double now = glfwGetTime();
 		if (now >= nextFrame) {
 			nextFrame = now + timePerFrame;
+			glClear(GL_COLOR_BUFFER_BIT);
 			
-			
-
-
 
 			triangleShader.useShader();
 			triangleMesh.render();
-			
+
+
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
 
@@ -167,15 +160,13 @@ int main(void)
 
 		/* Poll for and process events */
 		glfwPollEvents();
-
-
-
 	}
 
 
 	/*
 	 * Deconstruct
 	 */
+
 	
 
 	glfwDestroyWindow(window);
