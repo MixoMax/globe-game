@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://xgrg2fcdypo0"]
+[gd_scene load_steps=11 format=3 uid="uid://xgrg2fcdypo0"]
 
 [ext_resource type="Script" uid="uid://q1cafunqhoh3" path="res://scripts/character_body_3d.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://n6jwfinig6bg" path="res://globeManager.gd" id="2_0xm2m"]
+[ext_resource type="Shader" uid="uid://db387fqi8bt7" path="res://world.gdshader" id="3_h2yge"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
 size = Vector3(9.866882, 0.1665039, 9.985535)
@@ -11,9 +13,22 @@ size = Vector3(9.866882, 0.1665039, 9.985535)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lquwl"]
 
+[sub_resource type="Gradient" id="Gradient_h2yge"]
+offsets = PackedFloat32Array(0.4390244, 0.43978658, 0.48360655, 0.5518293, 0.58612806, 0.6105183, 0.7118902)
+colors = PackedColorArray(0, 0, 1, 1, 1, 1, 0, 1, 0.007843138, 0.47058824, 0.17254902, 1, 0.013793058, 0.46295264, 0.17366342, 1, 0.20504037, 0.21752289, 0.20948333, 1, 0.21050721, 0.21050721, 0.21050724, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1bvp3"]
+gradient = SubResource("Gradient_h2yge")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
+render_priority = 0
+shader = ExtResource("3_h2yge")
+shader_parameter/gradient_texture = SubResource("GradientTexture1D_1bvp3")
+
 [node name="Node3D" type="Node3D"]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.844233, -5.869711, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.1, 0, 0, 0, 1, 0.009124756, -0.41674805, -0.0011901855)
@@ -24,6 +39,7 @@ transform = Transform3D(10, 0, 0, 0, 0.1, 0, 0, 0, 10, 0, 0, 0)
 mesh = SubResource("BoxMesh_h2yge")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.844233, -3.4971423, 0)
 script = ExtResource("1_ig7tw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
@@ -35,4 +51,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33, 0)
 shape = SubResource("CapsuleShape3D_lquwl")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.00554, 2.263647)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002354622, 0.57606256, 6.4514737)
+
+[node name="GlobeManager" type="Node" parent="."]
+script = ExtResource("2_0xm2m")
+shader = SubResource("ShaderMaterial_h2yge")
+resolution = 75
