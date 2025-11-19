@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://xgrg2fcdypo0"]
+[gd_scene load_steps=13 format=3 uid="uid://xgrg2fcdypo0"]
 
 [ext_resource type="Script" uid="uid://q1cafunqhoh3" path="res://scripts/character_body_3d.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://n6jwfinig6bg" path="res://globeManager.gd" id="2_0xm2m"]
 [ext_resource type="Shader" uid="uid://db387fqi8bt7" path="res://world.gdshader" id="3_h2yge"]
+[ext_resource type="Shader" uid="uid://dyajpvrnln6fa" path="res://waterShader.gdshader" id="4_1bvp3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
 size = Vector3(9.866882, 0.1665039, 9.985535)
@@ -24,6 +25,13 @@ gradient = SubResource("Gradient_h2yge")
 render_priority = 0
 shader = ExtResource("3_h2yge")
 shader_parameter/gradient_texture = SubResource("GradientTexture1D_1bvp3")
+shader_parameter/size = 2.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
+render_priority = 0
+shader = ExtResource("4_1bvp3")
+shader_parameter/color = Vector3(0, 0.07, 1)
+shader_parameter/height = 1.3900000000000001
 
 [node name="Node3D" type="Node3D"]
 
@@ -51,9 +59,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33, 0)
 shape = SubResource("CapsuleShape3D_lquwl")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002354622, 0.57606256, 6.4514737)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002354622, 0.57606256, 7.023478)
 
 [node name="GlobeManager" type="Node" parent="."]
 script = ExtResource("2_0xm2m")
 shader = SubResource("ShaderMaterial_h2yge")
-resolution = 75
+waterShader = SubResource("ShaderMaterial_lquwl")
+resolution = 500
+size = 2.0

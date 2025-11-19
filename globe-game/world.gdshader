@@ -2,8 +2,10 @@ shader_type spatial;
 
 
 uniform sampler2D gradient_texture;
+uniform float size;
 
 varying float vHeight;
+
 
 float random(vec2 p) {
     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -15,7 +17,6 @@ float random(vec3 p) {
     p3 += dot(p3, p3.yzx + 33.33);
     return fract((p3.x + p3.y) * p3.z);
 }
-
 vec2 random2 (in vec2 st) {
     vec2 vec = vec2(random(st)*2.-1.,random(st+.5)*2.-1.);
     if (abs(vec.x) < 1e-4 && abs(vec.y) < 1e-4) {
@@ -44,7 +45,7 @@ float noise2D (in vec2 st) {
     vec2 b = random2(i + vec2(1.0, 0.0));
     vec2 c = random2(i + vec2(0.0, 1.0));
     vec2 d = random2(i + vec2(1.0, 1.0));
-    
+
     vec2 u = f;
     vec2 v = f - vec2(1.0, 0.0);
     vec2 w = f - vec2(0.0, 1.0);
@@ -55,15 +56,14 @@ float noise2D (in vec2 st) {
     float vb = dot(b, v);
     float vc = dot(c, w);
     float vd = dot(d, x);
-    
+
     vec2 fade = f * f * (3.0 - 2.0 * f); // Perlin's fade function
     float x1 = mix(va, vb, fade.x);
     float x2 = mix(vc, vd, fade.x);
     float value = mix(x1, x2, fade.y);
-    
+
     return value;
 }
-
 float noise3D (in vec3 st) {
     vec3 i = floor(st);
     vec3 fr = fract(st);
@@ -77,7 +77,7 @@ float noise3D (in vec3 st) {
     vec3 f = random3(i + vec3(1.0, 0.0, 1.0));
     vec3 g = random3(i + vec3(0.0, 1.0, 1.0));
     vec3 h = random3(i + vec3(1.0, 1.0, 1.0));
-    
+
     vec3 q = fr;
     vec3 r = fr - vec3(1.0, 0.0, 0.0);
     vec3 s = fr - vec3(0.0, 1.0, 0.0);
@@ -96,7 +96,7 @@ float noise3D (in vec3 st) {
     float vf = dot(f, v);
     float vg = dot(g, w);
     float vh = dot(h, x);
-    
+
     vec3 fade = fr * fr * (3.0 - 2.0 * fr); // Perlin's fade function
     float x1 = mix(va, vb, fade.x);
     float x2 = mix(vc, vd, fade.x);
@@ -105,14 +105,22 @@ float noise3D (in vec3 st) {
     float x3 = mix(x1, x2, fade.y);
 	float y3 = mix(y1, y2, fade.y);
 	float value = mix(x3, y3, fade.z);
-    
+
     return value;
+}
+
+
+float easeInOutQuint(float x) {
+	return x < 0.5 ? 16. * x * x * x * x * x : 1. - pow(-2. * x + 2., 5) / 2.;
+}
+float easeInOutCubic(float x) {
+	return x < 0.5 ? 4. * x * x * x : 1. - pow(-2. * x + 2., 3) / 2.;
 }
 
 void vertex() {
 	float noiseValue = 0.;
     int amount = 10;
-    
+
     float lacunarity = 2.;
     float persistance = .5;
     float amplitudeAddition = 0.;
@@ -121,22 +129,23 @@ void vertex() {
     for(int i=0;i<amount;i++){
         amplitudeAddition += amplitude;
         noiseValue += amplitude * positive((noise3D(VERTEX.xyz*(frequency))));
-        
+
         frequency *= lacunarity;
         amplitude *= persistance;
     }
     noiseValue /= amplitudeAddition;
 
+	//noiseValue = easeInOutCubic(noiseValue);
 	vHeight = (noiseValue);
-	VERTEX *= (vHeight) + .5;
+	VERTEX *= (vHeight)*size +.5;
 }
 
 void fragment() {
-	
+
 	// Called for every pixel the material is visible on.
 	vec3 color = texture(gradient_texture, vec2(vHeight,0)).xyz;
 	ALBEDO = color;
-	
+
 }
 
 //void light() {

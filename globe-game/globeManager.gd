@@ -2,6 +2,7 @@
 extends Node
 
 @export var shader: ShaderMaterial
+@export var waterShader: ShaderMaterial
 @export var resolution: int = 10
 @export var size: float = 1
 @export_tool_button("Generate Mesh")
@@ -15,7 +16,7 @@ func _ready() -> void:
 var vertices:Array[Vector3] = []
 
 class Chunk extends MeshInstance3D:
-	func _init(startPos: Vector3, endPos: Vector3, resolution: int, size: float, shader: ShaderMaterial) -> void:
+	func _init(startPos: Vector3, endPos: Vector3, resolution: int, size: float, shader: ShaderMaterial, waterShader: ShaderMaterial) -> void:
 		print("new chunk")
 		var arrayMesh := ArrayMesh.new()
 		var vertices := PackedVector3Array([])
@@ -74,8 +75,16 @@ class Chunk extends MeshInstance3D:
 		vao[Mesh.ARRAY_NORMAL] = normals
 		
 		arrayMesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, vao)
+		#arrayMesh.surface_get_material(0).set("size",size);
 		material_override = shader
 		mesh = arrayMesh
+		
+		var waterMesh = MeshInstance3D.new()
+		var waterArrayMesh = ArrayMesh.new()
+		waterArrayMesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, vao)
+		waterMesh.material_override = waterShader
+		waterMesh.mesh = waterArrayMesh
+		add_child(waterMesh)
 	
 	func generate():
 		pass
@@ -89,12 +98,12 @@ func genMesh() -> void:
 		child.queue_free()
 	
 	var chunks = [
-		Chunk.new(Vector3(-.5,-.5, .5),Vector3( .5, .5, .5), resolution, size, shader),
-		Chunk.new(Vector3(-.5,-.5,-.5),Vector3( .5, .5,-.5), resolution, size, shader),
-		Chunk.new(Vector3(-.5, .5,-.5),Vector3( .5, .5, .5), resolution, size, shader),
-		Chunk.new(Vector3(-.5,-.5,-.5),Vector3( .5,-.5, .5), resolution, size, shader),
-		Chunk.new(Vector3( .5,-.5,-.5),Vector3( .5, .5, .5), resolution, size, shader),
-		Chunk.new(Vector3(-.5,-.5,-.5),Vector3(-.5, .5, .5), resolution, size, shader)
+		Chunk.new(Vector3(-.5,-.5, .5),Vector3( .5, .5, .5), resolution, size, shader,waterShader),
+		Chunk.new(Vector3(-.5,-.5,-.5),Vector3( .5, .5,-.5), resolution, size, shader,waterShader),
+		Chunk.new(Vector3(-.5, .5,-.5),Vector3( .5, .5, .5), resolution, size, shader,waterShader),
+		Chunk.new(Vector3(-.5,-.5,-.5),Vector3( .5,-.5, .5), resolution, size, shader,waterShader),
+		Chunk.new(Vector3( .5,-.5,-.5),Vector3( .5, .5, .5), resolution, size, shader,waterShader),
+		Chunk.new(Vector3(-.5,-.5,-.5),Vector3(-.5, .5, .5), resolution, size, shader,waterShader)
 		];
 	for chunk in chunks:
 		add_child(chunk)
