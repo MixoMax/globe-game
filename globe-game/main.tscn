@@ -25,13 +25,14 @@ gradient = SubResource("Gradient_h2yge")
 render_priority = 0
 shader = ExtResource("3_h2yge")
 shader_parameter/gradient_texture = SubResource("GradientTexture1D_1bvp3")
-shader_parameter/size = 2.0
+shader_parameter/worldRadius = 50.0
+shader_parameter/noiseInfluence = 50.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
 render_priority = 0
 shader = ExtResource("4_1bvp3")
 shader_parameter/color = Vector3(0, 0.07, 1)
-shader_parameter/height = 1.3900000000000001
+shader_parameter/height = 72.135
 
 [node name="Node3D" type="Node3D"]
 
@@ -65,5 +66,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002354622, 0.57606256, 7.0
 script = ExtResource("2_0xm2m")
 shader = SubResource("ShaderMaterial_h2yge")
 waterShader = SubResource("ShaderMaterial_lquwl")
-resolution = 500
+resolution = 30
 size = 2.0

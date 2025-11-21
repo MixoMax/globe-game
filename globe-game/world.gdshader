@@ -2,7 +2,8 @@ shader_type spatial;
 
 
 uniform sampler2D gradient_texture;
-uniform float size;
+uniform float worldRadius;
+uniform float noiseInfluence;
 
 varying float vHeight;
 
@@ -137,7 +138,7 @@ void vertex() {
 
 	//noiseValue = easeInOutCubic(noiseValue);
 	vHeight = (noiseValue);
-	VERTEX *= (vHeight)*size +.5;
+	VERTEX *= (vHeight)*noiseInfluence + worldRadius;
 }
 
 void fragment() {
