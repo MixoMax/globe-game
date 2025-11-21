@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8q705x2y3w1"]
+
+[ext_resource type="Script" uid="uid://cnskwjg5yh5oi" path="res://scripts/ship.gd" id="1_ship"]
+[ext_resource type="ArrayMesh" uid="uid://dho7mctlb7esq" path="res://assets/model_3.obj" id="2_model"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.041992188
+height = 0.54196167
+
+[node name="Ship" type="RigidBody3D"]
+mass = 1000.0
+linear_damp = 1.0
+angular_damp = 2.0
+script = ExtResource("1_ship")
+
+[node name="ShipMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.005, 0, -7.5497897e-10, 0, 0.005, 0, 7.5497897e-10, 0, -0.005, 0, 0, 0)
+mesh = ExtResource("2_model")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.06890802, -0.011413887)
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0.113906175, 0.2486862)
+near = 0.001

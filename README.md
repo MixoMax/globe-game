@@ -1,3 +1,7 @@
-Absolute Path of Project **MUST** be "C:\src\cpp" -> 
->cd "C:\src\cpp"
->git clone "https://github.com/MixoMax/globe-game/"
+# Globe Game
+
+A sailing game set in the real world with real world maps and weather data.
+
+## Features
+
+See [todo.md](todo.md) for a list of planned features.
