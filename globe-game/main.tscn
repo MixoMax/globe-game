@@ -20,9 +20,6 @@ image = SubResource("Image_1bvp3")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
 render_priority = 0
 shader = ExtResource("3_h2yge")
-shader_parameter/gradient_texture = SubResource("GradientTexture1D_1bvp3")
-shader_parameter/worldRadius = 50.0
-shader_parameter/noiseInfluence = 50.0
 shader_parameter/map_texture = SubResource("ImageTexture_lquwl")
 shader_parameter/water_level = 0.2855102
 shader_parameter/height_scale = 1.0
@@ -32,10 +29,10 @@ render_priority = 0
 shader = ExtResource("4_1bvp3")
 shader_parameter/map_texture = SubResource("ImageTexture_lquwl")
 shader_parameter/color = Color(0, 0.4, 0.8, 1)
-shader_parameter/water_level = 0.67
+shader_parameter/water_level = 0.2855102
 shader_parameter/height_scale = 1.0
-shader_parameter/wave_speed = 2.0
-shader_parameter/wave_global_scale = 0.5
+shader_parameter/wave_speed = 0.5
+shader_parameter/wave_global_scale = 0.1
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_7mycd"]
 
@@ -52,13 +49,12 @@ show_debug_vectors = false
 script = ExtResource("2_0xm2m")
 shader = SubResource("ShaderMaterial_h2yge")
 waterShader = SubResource("ShaderMaterial_lquwl")
-resolution = 500
+resolution = 50
+chunk_subdivisions = 10
 noise = SubResource("FastNoiseLite_7mycd")
 water_level = 0.2855102
 use_target_water_percent = true
 land_height_multiplier = 5.0
-wave_speed = null
-wave_global_scale = null
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.36864614, -1.2389688, 85.33702)

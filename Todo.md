@@ -1,9 +1,10 @@
 
 # Stage 1 (MVP):
 - [ ] Globe rendering with some map
-- [ ] some wave simulation, not based on real data
+- [ ] some wave simulation, not based on real data (Gerstner Waves: https://catlikecoding.com/unity/tutorials/flow/waves/)
 - [ ] some wind simulation, not based on real data
 - [ ] basic sailing movement (either physics based or simple controls with a Polar plot)
+- [ ] LOD
 
 # Stage 2:
 

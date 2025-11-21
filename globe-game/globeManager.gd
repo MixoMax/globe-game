@@ -7,6 +7,8 @@ signal map_generated
 @export var shader: ShaderMaterial
 @export var waterShader: ShaderMaterial
 @export var resolution: int = 20
+@export var chunk_subdivisions:int = 1
+@export var inflatePlanet:bool = true
 @export var size: float = 50.0
 @export var map_resolution: Vector2i = Vector2i(512, 256)
 @export var noise: FastNoiseLite
@@ -33,7 +35,7 @@ func _ready() -> void:
 	genMesh()
 
 class Chunk extends MeshInstance3D:
-	func _init(startPos: Vector3, endPos: Vector3, resolution: int, size: float, shader: ShaderMaterial, waterShader: ShaderMaterial) -> void:
+	func _init(startPos: Vector3, endPos: Vector3, resolution: int, size: float, shader: ShaderMaterial, waterShader: ShaderMaterial, inflatePlanet: bool) -> void:
 		var arrayMesh := ArrayMesh.new()
 		var vertices := PackedVector3Array([])
 		var indices := PackedInt32Array([])
@@ -43,6 +45,14 @@ class Chunk extends MeshInstance3D:
 		var dx = endPos.x-startPos.x
 		var dy = endPos.y-startPos.y
 		var dz = endPos.z-startPos.z
+		
+		var axis = Vector3()
+		if dx==0:
+			axis.x = 1
+		if dy==0:
+			axis.y = 1
+		if dz==0:
+			axis.z = 1
 		
 		for x in range(max(sign(dx)*resolution,1)):
 			for y in range(max(sign(dy)*resolution,1)):
@@ -56,7 +66,8 @@ class Chunk extends MeshInstance3D:
 						startPos.y + v_step * abs(dy),
 						startPos.z + w_step * abs(dz))
 					
-					dir = dir.normalized()
+					if inflatePlanet:
+						dir = dir.normalized()
 					normals.append(dir)
 					
 					var pos = dir * size
@@ -76,7 +87,7 @@ class Chunk extends MeshInstance3D:
 					var index = i + j*resolution
 					
 					if j >= 1 and i >= 1:
-						if startPos.x <= 0 and ((startPos.y >= 0) if dy==0 else (startPos.y <= 0)) and startPos.z <= 0:
+						if (axis.x and startPos.x<0) or (axis.y and startPos.y>0) or (axis.z and startPos.z<0):
 							indices.append(index-resolution)
 							indices.append(index-1)
 							indices.append(index)
@@ -264,14 +275,21 @@ func genMesh() -> void:
 	for child in get_children():
 		child.queue_free()
 	
-	var chunks = [
-		Chunk.new(Vector3(-.5,-.5, .5),Vector3( .5, .5, .5), resolution, size, shader,waterShader),
-		Chunk.new(Vector3(-.5,-.5,-.5),Vector3( .5, .5,-.5), resolution, size, shader,waterShader),
-		Chunk.new(Vector3(-.5, .5,-.5),Vector3( .5, .5, .5), resolution, size, shader,waterShader),
-		Chunk.new(Vector3(-.5,-.5,-.5),Vector3( .5,-.5, .5), resolution, size, shader,waterShader),
-		Chunk.new(Vector3( .5,-.5,-.5),Vector3( .5, .5, .5), resolution, size, shader,waterShader),
-		Chunk.new(Vector3(-.5,-.5,-.5),Vector3(-.5, .5, .5), resolution, size, shader,waterShader)
-		];
+	var chunks = []
+	for i in range(chunk_subdivisions):
+		for j in range(chunk_subdivisions):
+			var x1:float = 	   i/float(chunk_subdivisions) - .5
+			var y1:float = 	   j/float(chunk_subdivisions) - .5
+			var x2:float = (i+1)/float(chunk_subdivisions) - .5
+			var y2:float = (j+1)/float(chunk_subdivisions) - .5
+			#print("from ",x1,",",y1," to ",x2,",",y2)
+			chunks.append(Chunk.new(Vector3( x1, y1, .5),Vector3( x2, y2, .5), resolution, size, shader, waterShader, inflatePlanet))
+			chunks.append(Chunk.new(Vector3( x1, y1,-.5),Vector3( x2, y2,-.5), resolution, size, shader, waterShader, inflatePlanet))
+			chunks.append(Chunk.new(Vector3( x1, .5, y1),Vector3( x2, .5, y2), resolution, size, shader, waterShader, inflatePlanet))
+			chunks.append(Chunk.new(Vector3( x1,-.5, y1),Vector3( x2,-.5, y2), resolution, size, shader, waterShader, inflatePlanet))
+			chunks.append(Chunk.new(Vector3( .5, x1, y1),Vector3( .5, x2, y2), resolution, size, shader, waterShader, inflatePlanet))
+			chunks.append(Chunk.new(Vector3(-.5, x1, y1),Vector3(-.5, x2, y2), resolution, size, shader, waterShader, inflatePlanet))
+
 	for chunk in chunks:
 		add_child(chunk)
 		
